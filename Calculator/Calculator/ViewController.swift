@@ -24,6 +24,10 @@ func divide( text1: String, text2: String) -> String {
     return String(Int(text1)! / Int(text2)!)
 }
 
+func reminder( text1: String, text2: String) -> String {
+    return String(Int(text1)! % Int(text2)!)
+}
+
 func doMathOperation( text1: String, text2: String, symbol: String) -> String {
     switch symbol {
     case "+" :
@@ -34,6 +38,8 @@ func doMathOperation( text1: String, text2: String, symbol: String) -> String {
         return multiply(text1, text2: text2)
     case "/" :
         return divide(text1, text2: text2)
+    case "%" :
+        return reminder(text1, text2: text2)
     default:
         break;
         
@@ -67,10 +73,11 @@ class ViewController: UIViewController {
         userTyping = true
     }
     
-    @IBAction func Pi(sender: UIButton) {
+    @IBAction func UnaryOperator(sender: UIButton) {
         userTyping = false
-        displayOutput.text = String(M_PI)
         currentValue = displayOutput.text
+        currentValue = String(Int(currentValue!)! * -1)
+        displayOutput.text = currentValue
     }
     
     @IBAction func clearPanel(sender: UIButton) {
