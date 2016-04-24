@@ -9,23 +9,23 @@
 import UIKit
 
 func add( text1: String, text2: String) -> String {
-    return String(Int(text1)! + Int(text2)!)
+    return String(Double(text1)! + Double(text2)!)
 }
 
 func subtract( text1: String, text2: String) -> String {
-    return String(Int(text1)! - Int(text2)!)
+    return String(Double(text1)! - Double(text2)!)
 }
 
 func multiply( text1: String, text2: String) -> String {
-    return String(Int(text1)! * Int(text2)!)
+    return String(Double(text1)! * Double(text2)!)
 }
 
 func divide( text1: String, text2: String) -> String {
-    return String(Int(text1)! / Int(text2)!)
+    return String(Double(text1)! / Double(text2)!)
 }
 
 func reminder( text1: String, text2: String) -> String {
-    return String(Int(text1)! % Int(text2)!)
+    return String(Double(text1)! % Double(text2)!)
 }
 
 func doMathOperation( text1: String, text2: String, symbol: String) -> String {
@@ -76,7 +76,7 @@ class ViewController: UIViewController {
     @IBAction func UnaryOperator(sender: UIButton) {
         userTyping = false
         currentValue = displayOutput.text
-        currentValue = String(Int(currentValue!)! * -1)
+        currentValue = String(Double(currentValue!)! * -1)
         displayOutput.text = currentValue
     }
     
