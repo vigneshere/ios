@@ -8,47 +8,8 @@
 
 import UIKit
 
-func add( text1: String, text2: String) -> String {
-    return String(Double(text1)! + Double(text2)!)
-}
-
-func subtract( text1: String, text2: String) -> String {
-    return String(Double(text1)! - Double(text2)!)
-}
-
-func multiply( text1: String, text2: String) -> String {
-    return String(Double(text1)! * Double(text2)!)
-}
-
-func divide( text1: String, text2: String) -> String {
-    return String(Double(text1)! / Double(text2)!)
-}
-
-func reminder( text1: String, text2: String) -> String {
-    return String(Double(text1)! % Double(text2)!)
-}
-
-func doMathOperation( text1: String, text2: String, symbol: String) -> String {
-    switch symbol {
-    case "+" :
-        return add(text1, text2: text2)
-    case "-" :
-        return subtract(text1, text2: text2)
-    case "*" :
-        return multiply(text1, text2: text2)
-    case "/" :
-        return divide(text1, text2: text2)
-    case "%" :
-        return reminder(text1, text2: text2)
-    default:
-        break;
-        
-    }
-    return String("");
-}
-
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -59,78 +20,43 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBOutlet weak var displayOutput: UILabel!
+    @IBOutlet private weak var displayOutput: UILabel!
+    
+    private var displayOutputValue: Double {
+        get {
+            return Double(displayOutput.text!)!
+        }
+        set {
+            displayOutput.text = String(newValue)
+        }
+    }
     
     var userTyping = false
-    var previousValue:String?
-    var currentValue:String?
-    var operationSelected:String?
-   
-    @IBAction func touchDigit(sender: UIButton) {
+    var brain = CalculatorBrain()
+    
+    @IBAction private func touchDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         displayOutput.text = userTyping ? (displayOutput.text! + digit) : digit
-        currentValue = displayOutput.text
         userTyping = true
     }
     
-    @IBAction func UnaryOperator(sender: UIButton) {
-        userTyping = false
-        currentValue = displayOutput.text
-        currentValue = String(Double(currentValue!)! * -1)
-        displayOutput.text = currentValue
-    }
-    
-    @IBAction func clearPanel(sender: UIButton) {
+    @IBAction private func clearPanel(sender: UIButton) {
         displayOutput.text = "0"
         userTyping = false
-        previousValue = nil
-        currentValue = nil
-        operationSelected = nil
     }
     
-    @IBAction func performOperation(sender: UIButton) {
+    @IBAction private func performOperation(sender: UIButton) {
+        if userTyping {
+            brain.setOperand(displayOutputValue)
+        }
+        
         userTyping = false
         
-        if let mathSymbol = sender.currentTitle {
-            
-            // empty state
-            if currentValue == nil && previousValue == nil {
-                return
-            }
-            
-            // get the operation
-            let prevOperation = operationSelected
-            operationSelected = mathSymbol
-            
-            // no input yet, operation noted, just skip
-            if currentValue == nil {
-                return
-            }
-            
-            // no operation stored previously, swap prev/current
-            if prevOperation == nil  {
-                previousValue = currentValue
-                currentValue = nil
-                return
-            }
-            
-            // perform operation and update
-            let output = doMathOperation(previousValue!, text2: currentValue!, symbol: prevOperation!)
-            displayOutput.text = output
-            
-            // nothing to remember for "=" operator
-            if mathSymbol == "=" {
-                currentValue = output
-                previousValue = nil
-                operationSelected = nil
-                return
-            }
-            
-            previousValue = output
-            currentValue = nil
+        if let symbol = sender.currentTitle {
+            brain.performOperation(symbol)
+            displayOutputValue = brain.result
         }
     }
-   
     
 }
 
