@@ -40,8 +40,23 @@ class ViewController: UIViewController {
         userTyping = true
     }
     
+    var savedState : CalculatorBrain.PropertyList?
+    
+    @IBAction func save() {
+        savedState = brain.savedState
+    }
+    
+    @IBAction func retrieve() {
+        if savedState != nil {
+            brain.savedState = savedState!
+            displayOutputValue = brain.result
+        }
+    }
+    
     @IBAction private func clearPanel(sender: UIButton) {
-        displayOutput.text = "0"
+        savedState = nil
+        brain.clear()
+        displayOutputValue = brain.result
         userTyping = false
     }
     

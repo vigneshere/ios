@@ -12,7 +12,10 @@ class CalculatorBrain {
     
     private var accumulator = 0.0
     
-    func setOperand(operand: Double) { accumulator = operand }
+    func setOperand(operand: Double) {
+        internalState.append(operand)
+        accumulator = operand
+    }
     
     private enum Operation {
         case Constant(Double)
@@ -32,8 +35,15 @@ class CalculatorBrain {
         "=" : Operation.Equals
     ]
     
+    func clear() {
+        pendingBinaryOperation = false
+        accumulator = 0.0
+        internalState.removeAll()
+    }
+    
     func performOperation(symbol: String) {
         if let operation = operations[symbol] {
+            internalState.append(symbol)
             switch operation {
             case .Constant(let value): accumulator = value
             case .UnaryOperation(let function): accumulator = function(accumulator)
@@ -46,6 +56,33 @@ class CalculatorBrain {
             
         }
     }
+    
+    typealias PropertyList = AnyObject
+    
+    var savedState : PropertyList {
+        get {
+            return internalState
+        }
+        set {
+            let oldPendingBinaryOp = pendingBinaryOperation
+            let oldBinaryOpInfo = pendingBinaryOperationInfo
+            clear()
+            if let ops = newValue as? [AnyObject] {
+                for op in ops {
+                    if let operand = op as? Double {
+                        setOperand(operand)
+                    }
+                    else if let operation = op as? String {
+                        performOperation(operation)
+                    }
+                }
+            }
+            pendingBinaryOperation = oldPendingBinaryOp
+            pendingBinaryOperationInfo = oldBinaryOpInfo
+        }
+    }
+    
+    private var internalState = [PropertyList]()
     
     private func performBinaryOperation() {
         if pendingBinaryOperation {

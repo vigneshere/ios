@@ -39,18 +39,19 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="133" height="95"/>
                                                         <color key="backgroundColor" red="0.95680628270000001" green="0.95680628270000001" blue="0.95680628270000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                        <state key="normal" title="c"/>
+                                                        <state key="normal" title="MS"/>
                                                         <connections>
-                                                            <action selector="clearPanel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aL1-7a-ZCn"/>
+                                                            <action selector="save" destination="BYZ-38-t0r" eventType="touchUpInside" id="zof-MA-0E3"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12i-32-Bta">
                                                         <rect key="frame" x="143" y="0.0" width="132" height="95"/>
                                                         <color key="backgroundColor" red="0.95680628270000001" green="0.95680628270000001" blue="0.95680628270000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                        <state key="normal" title="+/-"/>
+                                                        <state key="normal" title="MR"/>
                                                         <connections>
                                                             <action selector="performOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="IU9-qW-VRK"/>
+                                                            <action selector="retrieve" destination="BYZ-38-t0r" eventType="touchUpInside" id="9aV-oN-7Za"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yv3-Bq-R0J">
@@ -203,8 +204,9 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="133" height="95"/>
                                                         <color key="backgroundColor" red="0.95680628270000001" green="0.95680628270000001" blue="0.95680628270000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                        <state key="normal" title="π"/>
+                                                        <state key="normal" title="MC"/>
                                                         <connections>
+                                                            <action selector="clearPanel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fQl-ee-hqq"/>
                                                             <action selector="performOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oPc-9c-4cF"/>
                                                         </connections>
                                                     </button>
