@@ -12,6 +12,9 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        numberFormatter.maximumFractionDigits = 6
+        numberFormatter.alwaysShowsDecimalSeparator = false
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -32,7 +35,7 @@ class ViewController: UIViewController {
             displayOutput.text = String(newValue)
         }
     }
-
+    
     var userTyping = false
     var brain = CalculatorBrain()
     
@@ -48,21 +51,39 @@ class ViewController: UIViewController {
     var savedState : CalculatorBrain.PropertyList?
     
     @IBAction func save() {
-        savedState = brain.savedState
+        //savedState = brain.savedState
+        brain.variableValues["M"] = displayOutputValue
+        if userTyping {
+            brain.runProgram()
+        }
+        else {
+            brain.performUndoOperation()
+        }
+        syncDisplayWithBrain()
     }
     
     @IBAction func retrieve() {
-        if savedState != nil {
-            brain.savedState = savedState!
-            displayOutputValue = brain.result
-        }
+        brain.setOperand("M")
+        displayOutput.text = numberFormatter.stringFromNumber(brain.result)
+        //if savedState != nil {
+        //    brain.savedState = savedState!
+        //    displayOutputValue = brain.result
+        //}
     }
     
     @IBAction private func clear(sender: UIButton) {
-        savedState = nil
+        //savedState = nil
         brain.clear()
-        displayOutputValue = brain.result
+        syncDisplayWithBrain()
+    }
+    
+    private func syncDisplayWithBrain() {
         userTyping = false
+        displayOutput.text = numberFormatter.stringFromNumber(brain.result)
+        inputHistory.text = brain.description + (brain.isPartialResult ? " ..." : " ")
+        if (inputHistory.text!.isEmpty) {
+            inputHistory.text = " "
+        }
     }
     
     @IBAction private func backspace() {
@@ -75,27 +96,24 @@ class ViewController: UIViewController {
                 userTyping = false
             }
         }
+        else {
+            brain.performUndoOperation()
+            syncDisplayWithBrain()
+        }
     }
+    
+    private let numberFormatter = NSNumberFormatter()
     
     @IBAction private func performOperation(sender: UIButton) {
         if userTyping {
             brain.setOperand(displayOutputValue)
         }
         
-        userTyping = false
-        
         if let symbol = sender.currentTitle {
             brain.performOperation(symbol)
-            let numberFormatter = NSNumberFormatter()
-            numberFormatter.maximumFractionDigits = 6
-            numberFormatter.alwaysShowsDecimalSeparator = false
-            displayOutput.text = numberFormatter.stringFromNumber(brain.result)
         }
         
-        inputHistory.text = brain.description + (brain.isPartialResult ? " ..." : " ")
-        if (inputHistory.text!.isEmpty) {
-            inputHistory.text = " "
-        }
+        syncDisplayWithBrain()
     }
     
 }
