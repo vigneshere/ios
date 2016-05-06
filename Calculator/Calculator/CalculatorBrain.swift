@@ -18,6 +18,34 @@ class CalculatorBrain {
         case UnaryOperation((Double) -> Double)
         case BinaryOperation((Double, Double) -> Double)
         case Equals
+        
+        var isConstant: Bool {
+            if case Constant = self {
+                return true
+            }
+            return false
+        }
+        
+        var isUnaryOp: Bool {
+            if case UnaryOperation = self {
+                return true
+            }
+            return false
+        }
+        
+        var isBinaryOp: Bool {
+            if case BinaryOperation = self {
+                return true
+            }
+            return false
+        }
+        
+        var isEquals: Bool {
+            if case Equals = self {
+                return true
+            }
+            return false
+        }
     }
     
     private struct PendingBinaryOperationInfo {
@@ -49,8 +77,10 @@ class CalculatorBrain {
 
     private var program = [PropertyList]()
     
+    private var descriptionState = [String]()
+    
     private func performBinaryOperation() {
-        if pendingBinaryOperationInfo.status == true {
+        if pendingBinaryOperationInfo.status {
             accumulator = pendingBinaryOperationInfo.binaryFunction(pendingBinaryOperationInfo.firstOperand, accumulator)
             pendingBinaryOperationInfo.status = false
         }
@@ -62,96 +92,76 @@ class CalculatorBrain {
     var variableValues : Dictionary<String, Double> = [:]
     
     var isPartialResult : Bool {
-        get {
-            return pendingBinaryOperationInfo.status
-        }
+        return pendingBinaryOperationInfo.status
     }
     
     var result : Double {
-        get {
-            return accumulator
-        }
+        return accumulator
     }
     
     var description : String {
-        get {
-            var updatedState = [String]()
-            descNumberFormatter.alwaysShowsDecimalSeparator = false
-            var applyUnaryOnResult : Bool = true
-            for op in program {
-                if let operand = op as? Double {
-                    applyUnaryOnResult = false
-                    updatedState.append(descNumberFormatter.stringFromNumber(operand)!)
-                }
-                else if let symbol = op as? String {
-                    if let operation = operations[symbol] {
-                        switch operation {
-                        case .Equals:
-                            applyUnaryOnResult = true
-                        case .UnaryOperation:
-                            updatedState.insert(symbol + "(", atIndex:
-                                (applyUnaryOnResult ? 0 : (updatedState.count - 1)))
-                            updatedState.append(")")
-                            applyUnaryOnResult = true
-                        default:
-                            updatedState.append(symbol)
-                            applyUnaryOnResult = false
-                        }
-                    }
-                    else {
-                        updatedState.append(symbol)
-                    }
-                }
-                
-            }
-            return (updatedState.joinWithSeparator(" "))
-        }
+        return descriptionState.joinWithSeparator(" ")
     }
     
     func setOperand(operand: Double) {
         program.append(operand)
+        descNumberFormatter.alwaysShowsDecimalSeparator = false
+        descriptionState.append(descNumberFormatter.stringFromNumber(operand)!)
         accumulator = operand
     }
     
-    
     func setOperand(operand: String) {
         program.append(operand)
+        descriptionState.append(operand)
         accumulator = variableValues[operand] ?? 0.0
     }
-    
     
     func clear() {
         pendingBinaryOperationInfo.status = false
         accumulator = 0.0
         program.removeAll()
+        descriptionState.removeAll()
         variableValues.removeAll()
     }
     
     func performOperation(symbol: String) {
-        if let operation = operations[symbol] {
-            //user changed his mind and tries different binaryOperator now
-            if pendingBinaryOperationInfo.status == true,
-                let prevSymbol = program.last as? String,
-                let prevOperation = operations[prevSymbol] {
-                switch prevOperation {
-                case .BinaryOperation:
-                    pendingBinaryOperationInfo.status = false
-                    program.removeLast()
-                default:break
-                }
+        guard let operation = operations[symbol] else {
+            return
+        }
+        
+        var wrapUnaryOnResult = false
+        if let prevSymbol = program.last as? String, prevOperation = operations[prevSymbol] {
+            //user changed his mind and tries different Operator now
+            if prevOperation.isBinaryOp && !operation.isConstant {
+                pendingBinaryOperationInfo.status = false
+                program.removeLast()
             }
-            
-            program.append(symbol)
-            
-            switch operation {
-            case .Constant(let value): accumulator = value
-            case .UnaryOperation(let function): accumulator = function(accumulator)
-            case .BinaryOperation(let function):
-                performBinaryOperation()
-                pendingBinaryOperationInfo = PendingBinaryOperationInfo(status:true, firstOperand: accumulator, binaryFunction: function)
-            case .Equals: performBinaryOperation()
-            case .ConstOperation(let function): accumulator = function()
+            if prevOperation.isEquals || prevOperation.isUnaryOp {
+                wrapUnaryOnResult = true
             }
+        }
+        
+        // update description
+        if operation.isUnaryOp {
+            descriptionState.insert(symbol + "(", atIndex:(wrapUnaryOnResult ? 0 : (descriptionState.count - 1)))
+            descriptionState.append(")")
+        }
+        else if !operation.isEquals {
+            descriptionState.append(symbol)
+        }
+        
+        // save to program
+        program.append(symbol)
+        
+        // perform the actual op now
+        switch operation {
+        case .Constant(let value): accumulator = value
+        case .UnaryOperation(let function): accumulator = function(accumulator)
+        case .BinaryOperation(let function):
+            performBinaryOperation()
+            pendingBinaryOperationInfo = PendingBinaryOperationInfo(status:true, firstOperand: accumulator, binaryFunction: function)
+        case .Equals: performBinaryOperation()
+        case .ConstOperation(let function): accumulator = function()
         }
     }
     
