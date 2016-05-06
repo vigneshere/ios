@@ -3,29 +3,18 @@
 //  Calculator
 //
 //  Created by Vignesh Saravanai on 23/04/16.
-//  Copyright © 2016 Vignesh Saravanai. All rights reserved.
+//  Copyright © 2016 Vignesh Saravanai. All rights reserved./Users/svignesh/Downloads/AppIconResizer_201605062329_067b80440f63878dd3dad61b955b85d0/Icon-60@2x.png
 //
 
 import UIKit
 
 class ViewController: UIViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        numberFormatter.maximumFractionDigits = 6
-        numberFormatter.alwaysShowsDecimalSeparator = false
-        // Do any additional setup after loading the view, typically from a nib.
-    }
+    private var userTyping = false
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    private var brain = CalculatorBrain()
     
-    
-    @IBOutlet weak var inputHistory: UILabel!
-    @IBOutlet private weak var displayOutput: UILabel!
+    private let numberFormatter = NSNumberFormatter()
     
     private var displayOutputValue: Double {
         get {
@@ -36,9 +25,22 @@ class ViewController: UIViewController {
         }
     }
     
-    var userTyping = false
-    var brain = CalculatorBrain()
+    //utility func
+    private func syncDisplayWithBrain() {
+        userTyping = false
+        displayOutput.text = numberFormatter.stringFromNumber(brain.result)
+        inputHistory.text = brain.description + (brain.isPartialResult ? " ..." : " ")
+        if (inputHistory.text!.isEmpty) {
+            inputHistory.text = " "
+        }
+    }
     
+    // outlets
+    @IBOutlet weak var inputHistory: UILabel!
+    
+    @IBOutlet private weak var displayOutput: UILabel!
+    
+    // actions
     @IBAction private func touchDigit(sender: UIButton) {
         let digit = sender.currentTitle!
         let currentDisplay = userTyping ? (displayOutput.text! + digit) : digit
@@ -48,10 +50,7 @@ class ViewController: UIViewController {
         userTyping = true
     }
     
-    var savedState : CalculatorBrain.PropertyList?
-    
     @IBAction func save() {
-        //savedState = brain.savedState
         brain.variableValues["M"] = displayOutputValue
         if userTyping {
             brain.runProgram()
@@ -65,10 +64,6 @@ class ViewController: UIViewController {
     @IBAction func retrieve() {
         brain.setOperand("M")
         displayOutput.text = numberFormatter.stringFromNumber(brain.result)
-        //if savedState != nil {
-        //    brain.savedState = savedState!
-        //    displayOutputValue = brain.result
-        //}
     }
     
     @IBAction private func clear(sender: UIButton) {
@@ -77,15 +72,7 @@ class ViewController: UIViewController {
         syncDisplayWithBrain()
     }
     
-    private func syncDisplayWithBrain() {
-        userTyping = false
-        displayOutput.text = numberFormatter.stringFromNumber(brain.result)
-        inputHistory.text = brain.description + (brain.isPartialResult ? " ..." : " ")
-        if (inputHistory.text!.isEmpty) {
-            inputHistory.text = " "
-        }
-    }
-    
+  
     @IBAction private func backspace() {
         if let str = displayOutput.text where
             (str.characters.count > 0 && userTyping) {
@@ -102,7 +89,6 @@ class ViewController: UIViewController {
         }
     }
     
-    private let numberFormatter = NSNumberFormatter()
     
     @IBAction private func performOperation(sender: UIButton) {
         if userTyping {
@@ -114,6 +100,21 @@ class ViewController: UIViewController {
         }
         
         syncDisplayWithBrain()
+    }
+    
+    
+    // inherited public functions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        numberFormatter.maximumFractionDigits = 6
+        numberFormatter.alwaysShowsDecimalSeparator = false
+        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
 }
