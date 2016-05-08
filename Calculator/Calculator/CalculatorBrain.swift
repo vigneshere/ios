@@ -134,6 +134,7 @@ class CalculatorBrain {
             //user changed his mind and tries different Operator now
             if prevOperation.isBinaryOp && !operation.isConstant {
                 pendingBinaryOperationInfo.status = false
+                descriptionState.removeLast()
                 program.removeLast()
             }
             if prevOperation.isEquals || prevOperation.isUnaryOp {
