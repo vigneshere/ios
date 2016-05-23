@@ -58,7 +58,7 @@ class CalculatorBrain {
         "π" : Operation.Constant(M_PI),
         "℮" : Operation.Constant(M_E),
         "R" : Operation.ConstOperation({ drand48() } ),
-        "±" : Operation.UnaryOperation( { -$0 } ),
+        "sin" : Operation.UnaryOperation( { sin($0) } ),
         "√" : Operation.UnaryOperation( { sqrt($0) }  ),
         "×" : Operation.BinaryOperation( { $0 * $1 } ),
         "−" : Operation.BinaryOperation( { $0 - $1 } ),
@@ -144,7 +144,7 @@ class CalculatorBrain {
         
         // update description
         if operation.isUnaryOp {
-            descriptionState.insert(symbol + "(", atIndex:(wrapUnaryOnResult ? 0 : (descriptionState.count - 1)))
+            descriptionState.insert(symbol + "(", atIndex:((wrapUnaryOnResult || descriptionState.count == 0) ? 0 : (descriptionState.count - 1)))
             descriptionState.append(")")
         }
         else if !operation.isEquals {

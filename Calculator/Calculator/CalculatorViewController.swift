@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CalculatorViewController: UIViewController {
     
     private var userTyping = false
     
@@ -102,6 +102,32 @@ class ViewController: UIViewController {
         syncDisplayWithBrain()
     }
     
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == "showGraph" {
+            return !brain.isPartialResult && (brain.result != 0.0)
+        }
+        return true
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showGraph" {
+            print("showGraph prepareForSegue")
+            if let graphVC = segue.destinationViewController as? GraphViewController {
+                print("setting graph func in prepareForSegue \(brain.description)")
+                graphVC.function = graphFunc
+                graphVC.label = brain.description
+            }
+        }
+    }
+    
+    func graphFunc(x: Double) -> Double {
+        if let prevM = brain.variableValues["M"] {
+            brain.variableValues["M"] = x
+            brain.runProgram()
+            brain.variableValues["M"] = prevM
+        }
+        return brain.result
+    }
     
     // inherited public functions
     override func viewDidLoad() {
