@@ -11,19 +11,18 @@ import UIKit
 class GraphViewController: UIViewController {
     
     var function : ((Double) -> Double)?
-    
     var label : String?
     
+    //Tap recognizer action callback
     @IBAction func handleTap(recognizer: UITapGestureRecognizer) {
-        print("Inside handleTap \(recognizer.state)")
         switch recognizer.state {
         case .Ended: graphView.origin = recognizer.locationInView(self.view)
         default: break
         }
     }
     
+    //Pan recognizer action callback
     func handlePan(recognizer: UIPanGestureRecognizer) {
-        print("Inside handlePan \(recognizer.state)")
         switch recognizer.state {
         case .Ended,.Changed: graphView.origin = recognizer.locationInView(self.view)
         default: break
@@ -46,6 +45,4 @@ class GraphViewController: UIViewController {
         graphView.graphFunc = function
         graphView.label = label
     }
-    
-    
 }
