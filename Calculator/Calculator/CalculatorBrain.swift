@@ -129,6 +129,11 @@ class CalculatorBrain {
             return
         }
         
+        // need operand for unary/binary operation
+        if (operation.isUnaryOp || operation.isBinaryOp) && program.isEmpty {
+            return
+        }
+        
         var wrapUnaryOnResult = false
         if let prevSymbol = program.last as? String, prevOperation = operations[prevSymbol] {
             //user changed his mind and tries different Operator now
@@ -144,7 +149,7 @@ class CalculatorBrain {
         
         // update description
         if operation.isUnaryOp {
-            descriptionState.insert(symbol + "(", atIndex:((wrapUnaryOnResult || descriptionState.count == 0) ? 0 : (descriptionState.count - 1)))
+            descriptionState.insert(symbol + "(", atIndex:(wrapUnaryOnResult ? 0 : (descriptionState.count - 1)))
             descriptionState.append(")")
         }
         else if !operation.isEquals {

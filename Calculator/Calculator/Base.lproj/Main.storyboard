@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cy3-K1-H4P">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cy3-K1-H4P">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -12,7 +12,7 @@
                 <splitViewController id="cy3-K1-H4P" sceneMemberID="viewController">
                     <connections>
                         <segue destination="cpu-ox-qF3" kind="relationship" relationship="masterViewController" id="hM2-k8-gpe"/>
-                        <segue destination="c0V-sm-ncC" kind="relationship" relationship="detailViewController" id="Mud-I2-OC6"/>
+                        <segue destination="llr-Mj-Ujv" kind="relationship" relationship="detailViewController" id="Mud-I2-OC6"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NFM-H2-Wy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -306,11 +306,11 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ppe-Zh-RYJ">
                                                 <rect key="frame" x="0.0" y="383" width="560" height="67"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzc-Nj-2dA">
+                                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzc-Nj-2dA">
                                                         <rect key="frame" x="0.0" y="0.0" width="560" height="67"/>
                                                         <state key="normal" title="Show Graph"/>
                                                         <connections>
-                                                            <segue destination="c0V-sm-ncC" kind="showDetail" identifier="showGraph" id="g55-gY-rtF"/>
+                                                            <segue destination="llr-Mj-Ujv" kind="showDetail" identifier="showGraph" id="g55-gY-rtF"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -338,13 +338,14 @@
                     <connections>
                         <outlet property="displayOutput" destination="49a-iq-z1V" id="LYz-jj-9fU"/>
                         <outlet property="inputHistory" destination="bo7-Jn-1Oj" id="rKA-lb-J7h"/>
+                        <outlet property="showGraph" destination="mzc-Nj-2dA" id="dyy-6p-B9V"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1892" y="131"/>
         </scene>
-        <!--Graph View Controller-->
+        <!--Graph-->
         <scene sceneID="QVr-Xi-fYN">
             <objects>
                 <viewController id="c0V-sm-ncC" customClass="GraphViewController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
@@ -378,7 +379,7 @@
                             <constraint firstItem="NxC-I1-JoY" firstAttribute="bottom" secondItem="o5u-FK-2eS" secondAttribute="top" id="e9N-DG-s7Q"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Npl-t3-hwM"/>
+                    <navigationItem key="navigationItem" title="Graph" id="Npl-t3-hwM"/>
                     <connections>
                         <outlet property="graphView" destination="NxC-I1-JoY" id="7uK-Af-3lD"/>
                     </connections>
@@ -390,7 +391,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2440" y="902"/>
+            <point key="canvasLocation" x="-1628" y="902"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="DvU-W5-lbV">
@@ -409,6 +410,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ruR-vV-6G5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2704" y="131"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="5SI-GT-P5z">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="llr-Mj-Ujv" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pau-37-2Lf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="c0V-sm-ncC" kind="relationship" relationship="rootViewController" id="Vn0-Gc-JJn"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XWd-PT-dg8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2440" y="902"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

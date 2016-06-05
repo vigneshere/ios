@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalculatorViewController: UIViewController {
+class CalculatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private var userTyping = false
     
@@ -33,10 +33,13 @@ class CalculatorViewController: UIViewController {
         if (inputHistory.text!.isEmpty) {
             inputHistory.text = " "
         }
+        showGraph?.enabled = (!brain.isPartialResult && (brain.result != 0.0)) ? true : false
     }
     
     // outlets
     @IBOutlet weak var inputHistory: UILabel!
+    
+    @IBOutlet weak var showGraph: UIButton!
     
     @IBOutlet private weak var displayOutput: UILabel!
     
@@ -72,7 +75,7 @@ class CalculatorViewController: UIViewController {
         syncDisplayWithBrain()
     }
     
-  
+ 
     @IBAction private func backspace() {
         if let str = displayOutput.text where
             (str.characters.count > 0 && userTyping) {
@@ -112,7 +115,7 @@ class CalculatorViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showGraph" {
             print("showGraph prepareForSegue")
-            if let graphVC = segue.destinationViewController as? GraphViewController {
+            if let graphVC = segue.destinationViewController.contentViewController as? GraphViewController {
                 print("setting graph func in prepareForSegue \(brain.description)")
                 graphVC.function = graphFunc
                 graphVC.label = brain.description
@@ -129,12 +132,25 @@ class CalculatorViewController: UIViewController {
         return brain.result
     }
     
+    func splitViewController(splitViewController: UISplitViewController,
+                             collapseSecondaryViewController secondaryViewController: UIViewController,
+                                                             ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+        if primaryViewController.contentViewController == self {
+            if let graphVC = secondaryViewController.contentViewController as? GraphViewController where graphVC.function == nil {
+                return true
+            }
+        }
+        return false
+    }
+
+    
     // inherited public functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
         numberFormatter.maximumFractionDigits = 6
         numberFormatter.alwaysShowsDecimalSeparator = false
+        splitViewController?.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -143,5 +159,14 @@ class CalculatorViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+}
+
+extension UIViewController {
+    var contentViewController : UIViewController {
+        if let navCon = self as? UINavigationController {
+            return navCon.visibleViewController ?? self
+        }
+        return self
+    }
 }
 

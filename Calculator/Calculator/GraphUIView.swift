@@ -17,30 +17,24 @@ class GraphUIView: UIView {
     @IBInspectable private var graphColor : UIColor = UIColor.brownColor() { didSet { setNeedsDisplay() } }
     @IBInspectable private var labelColor : UIColor = UIColor.redColor() { didSet { setNeedsDisplay() } }
  
-    
     //computed properties
-    private var pointsPerUnit : CGFloat {
-        return 100 * scale
-    }
-    
-    private var defaultOrigin : CGPoint {
-        return CGPoint(x:bounds.midX, y:bounds.midY)
-    }
+    private var pointsPerUnit : CGFloat { return 100 * scale }
+    private var defaultOrigin : CGPoint { return CGPoint(x:bounds.midX, y:bounds.midY) }
 
-    // private
+    //private
     private var axesDrawer = AxesDrawer()
     
-    // utility function to compute X point
+    //utility function to compute X point
     private func getX(boundsX: Int, originX: CGFloat) -> Double {
         return Double((CGFloat(boundsX) - originX) / pointsPerUnit)
     }
     
-    // utility function to compute location Y
+    //utility function to compute location Y
     private func getBoundsY(y: Double, originY: CGFloat) -> CGFloat {
         return originY - round(CGFloat(y) * pointsPerUnit)
     }
     
-    // private helper functions for drawing
+    //private helper functions for drawing
     private func drawAxesWith(origin: CGPoint) {
         axesDrawer.contentScaleFactor = contentScaleFactor
         axesDrawer.color = axesColor
@@ -48,17 +42,17 @@ class GraphUIView: UIView {
     }
     
     private func drawGraphWith(origin: CGPoint) {
-        guard graphFunc != nil else {
+        guard let gFunc = graphFunc else {
             return
         }
         CGContextSaveGState(UIGraphicsGetCurrentContext())
         graphColor.set()
         let path = UIBezierPath()
         
-        // iterate over the bounds and calculate y correspoinding to each x using graphFunc
+        //iterate over the bounds and calculate y correspoinding to each x using graphFunc
         for boundsX in Int(bounds.minX)...Int(bounds.maxX) {
             let x = getX(boundsX, originX: origin.x)
-            let y = graphFunc!(x)
+            let y = gFunc(x)
             let cp = CGPoint(x: CGFloat(boundsX), y:getBoundsY(y, originY: origin.y))
             // check if point is within bounds
             if CGRectContainsPoint(bounds, cp) {
@@ -70,15 +64,15 @@ class GraphUIView: UIView {
     }
     
     private func drawAnchoredLabelAt(location: CGPoint) {
-        guard label != nil else {
+        guard let gLabel = label else {
             return
         }
         let attributes = [
             NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote),
             NSForegroundColorAttributeName : labelColor
         ]
-        let textRect = CGRect(center: location, size: label!.sizeWithAttributes(attributes))
-        label!.drawInRect(textRect, withAttributes: attributes)
+        let textRect = CGRect(center: location, size: gLabel.sizeWithAttributes(attributes))
+        gLabel.drawInRect(textRect, withAttributes: attributes)
     }
 
     //pulic vars: view parameters set by controller
@@ -86,7 +80,7 @@ class GraphUIView: UIView {
     var graphFunc : ((Double) -> Double)? { didSet { setNeedsDisplay() } }
     var label : String? { didSet { setNeedsDisplay() } }
 
-    // Pinch recognizer action callback
+    //Pinch recognizer action callback
     func changeScale(recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
         case .Changed, .Ended:

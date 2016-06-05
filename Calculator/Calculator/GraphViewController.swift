@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GraphViewController: UIViewController {
+class GraphViewController: UIViewController, UISplitViewControllerDelegate {
     
     var function : ((Double) -> Double)?
     var label : String?
@@ -40,6 +40,7 @@ class GraphViewController: UIViewController {
             ))
         }
     }
+    
     
     override func viewDidLoad() {
         graphView.graphFunc = function
