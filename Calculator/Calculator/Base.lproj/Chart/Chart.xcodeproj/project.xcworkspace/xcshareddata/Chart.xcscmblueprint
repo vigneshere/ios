@@ -1,0 +1,29 @@
+{
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "9025163822AAEA7A2D8AC9210D0874A56F62B462" : 0,
+    "116BEC75E350E31DE8F29F2AB4AC638252DA6D3C" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D1E65CCB-6FD9-4FF5-856A-FDEC0ADFC781",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "9025163822AAEA7A2D8AC9210D0874A56F62B462" : "..\/..\/..\/Charts",
+    "116BEC75E350E31DE8F29F2AB4AC638252DA6D3C" : "..\/..\/.."
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Chart",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Chart.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vigneshere\/ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "116BEC75E350E31DE8F29F2AB4AC638252DA6D3C"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/danielgindi\/Charts.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9025163822AAEA7A2D8AC9210D0874A56F62B462"
+    }
+  ]
+}
