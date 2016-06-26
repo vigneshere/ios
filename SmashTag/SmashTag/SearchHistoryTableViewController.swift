@@ -31,7 +31,7 @@ class SearchHistoryTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Recent Searches"
+        return Storyboard.RecentSearchSr
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -45,6 +45,8 @@ class SearchHistoryTableViewController: UITableViewController {
     private struct Storyboard {
         static let CellIdentifier = "SearchItem"
         static let TweetSearchSegue = "Search"
+        static let PopularSegue = "PopularSegue"
+        static let RecentSearchSr = "Recent Searches"
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -74,6 +76,20 @@ class SearchHistoryTableViewController: UITableViewController {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             searchHistory.removeHistoryAt(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        }
+    }
+    
+    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        performSegueWithIdentifier(Storyboard.PopularSegue, sender: history[indexPath.row])
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        if let searchText = sender as? String {
+            if let destVC = segue.destinationViewController.contentViewController as? PopularMentionTableViewController {
+                destVC.searchText = searchText
+            }
         }
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Xcode 7.0">
+    <entity name="MentionInfo" representedClassName="MentionInfo" syncable="YES">
+        <attribute name="text" attributeType="String" syncable="YES"/>
+        <attribute name="type" attributeType="String" syncable="YES"/>
+        <relationship name="searchCounts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchMentionCount" inverseName="mention" inverseEntity="SearchMentionCount" syncable="YES"/>
+        <relationship name="tweets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TweetInfo" inverseName="mentions" inverseEntity="TweetInfo" syncable="YES"/>
+    </entity>
+    <entity name="SearchMentionCount" representedClassName=".SearchMentionCount" syncable="YES">
+        <attribute name="count" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="mention" maxCount="1" deletionRule="Nullify" destinationEntity="MentionInfo" inverseName="searchCounts" inverseEntity="MentionInfo" syncable="YES"/>
+        <relationship name="searchText" maxCount="1" deletionRule="Nullify" destinationEntity="SearchText" inverseName="mentionCounts" inverseEntity="SearchText" syncable="YES"/>
+    </entity>
+    <entity name="SearchText" representedClassName=".SearchText" syncable="YES">
+        <attribute name="searchedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="text" attributeType="String" syncable="YES"/>
+        <relationship name="mentionCounts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchMentionCount" inverseName="searchText" inverseEntity="SearchMentionCount" syncable="YES"/>
+    </entity>
+    <entity name="TweetInfo" representedClassName="TweetInfo" syncable="YES">
+        <attribute name="text" attributeType="String" syncable="YES"/>
+        <attribute name="uniqid" attributeType="String" syncable="YES"/>
+        <relationship name="mentions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MentionInfo" inverseName="tweets" inverseEntity="MentionInfo" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MentionInfo" positionX="214" positionY="-63" width="128" height="105"/>
+        <element name="SearchMentionCount" positionX="223" positionY="126" width="128" height="88"/>
+        <element name="SearchText" positionX="-11" positionY="90" width="128" height="88"/>
+        <element name="TweetInfo" positionX="-20" positionY="-63" width="128" height="88"/>
+    </elements>
+</model>

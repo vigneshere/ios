@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TweetTableViewController: UITableViewController, UITextFieldDelegate {
 
@@ -51,6 +52,7 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
             dispatch_async(dispatch_get_main_queue()) {
                 if !newTweets.isEmpty && request == weakSelf?.lastTwitterRequest {
                     weakSelf?.tweets.insert(newTweets, atIndex: 0)
+                    weakSelf?.updateDatabase(newTweets)
                 }
                 print("new tweets \(newTweets.count)" )
                 weakSelf?.refreshControl?.endRefreshing()
@@ -58,9 +60,39 @@ class TweetTableViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    private func updateDatabase(newTweets: [Tweet]) {
+        let context = (UIApplication.sharedApplication().delegate as! AppDelegate).dataController.managedObjectContext
+        context.performBlock {
+            let searchText = SearchText.addSearchText(self.searchString!, inManagedObjectContext: context)
+            let lastSearch = searchText?.searchedAt
+            searchText?.searchedAt = NSDate()
+            _ = TweetInfo.addTweets(newTweets, searchText: self.searchString!, lastSearchedAt: lastSearch, inManagedObjectContext: context)
+            do {
+                try context.save()
+            }
+            catch let error {
+                print("context save failed \(error)")
+            }
+            
+        }
+        printDBStats()
+    }
+    
+    private func printDBStats() {
+        let context = (UIApplication.sharedApplication().delegate as! AppDelegate).dataController.managedObjectContext
+        context.performBlock {
+            if let results = try? context.executeFetchRequest(NSFetchRequest(entityName: "MentionInfo")) {
+                print("\(results.count) Mentions")
+            }
+            let tweetCount = context.countForFetchRequest(NSFetchRequest(entityName: "TweetInfo"), error: nil)
+            print("\(tweetCount) Tweets")
+        }
+        print("done DB stats")
+    }
+    
     private let searchHistory = SearchHistory()
     
-    
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.estimatedRowHeight = tableView.rowHeight
